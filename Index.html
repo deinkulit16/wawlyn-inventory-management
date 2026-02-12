@@ -213,7 +213,7 @@
             background: #f8f9fa;
         }
 
-        input[type="text"], input[type="email"], input[type="password"], input[type="number"], input[type="file"], input[type="date"], select {
+        input[type="text"], input[type="email"], input[type="password"], input[type="number"], input[type="file"], input[type="date"], input[type="datetime-local"], select {
             width: 100%;
             padding: 10px;
             border: 2px solid #ddd;
@@ -315,55 +315,6 @@
         .stat-card .value {
             font-size: 32px;
             font-weight: bold;
-        }
-
-        .location-breakdown {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-        }
-
-        .location-breakdown h3 {
-            color: #667eea;
-            margin-bottom: 15px;
-        }
-
-        .location-card {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            border-left: 4px solid #667eea;
-        }
-
-        .location-card h4 {
-            color: #333;
-            margin-bottom: 10px;
-        }
-
-        .location-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 10px;
-        }
-
-        .location-stat {
-            padding: 8px;
-            background: #f8f9fa;
-            border-radius: 5px;
-        }
-
-        .location-stat label {
-            font-size: 12px;
-            color: #666;
-            font-weight: normal;
-        }
-
-        .location-stat .stat-value {
-            font-size: 18px;
-            font-weight: bold;
-            color: #667eea;
         }
 
         .status-badge {
@@ -468,22 +419,6 @@
             font-style: italic;
         }
 
-        .import-log {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 15px;
-            max-height: 400px;
-            overflow-y: auto;
-            font-family: monospace;
-            font-size: 12px;
-        }
-
-        .import-log .success { color: #28a745; }
-        .import-log .error { color: #dc3545; }
-        .import-log .warning { color: #ffc107; }
-        .import-log .info { color: #17a2b8; }
-
         @media print {
             body * {
                 visibility: hidden;
@@ -503,7 +438,7 @@
     <!-- Login Screen -->
     <div id="loginScreen" class="login-container">
         <div class="logo-container">
-            <h1 style="color: #667eea; font-size: 2.5em;">WAWLYN</h1>
+            <img src="logo.jpg" alt="WAWLYN Logo">
         </div>
         <h2 style="color: #667eea; margin-bottom: 30px;">Inventory Management System</h2>
         <form class="login-form" onsubmit="login(event)">
@@ -522,7 +457,7 @@
     <div class="container" id="mainApp">
         <div class="header">
             <div class="header-left">
-                <h1 style="color: #667eea; font-size: 1.5em;">WAWLYN</h1>
+                <img src="logo.jpg" alt="WAWLYN Logo" class="header-logo">
                 <div class="header-text">
                     <h1>WAWLYN Limited</h1>
                     <p>Inventory Management System</p>
@@ -565,11 +500,6 @@
                 </div>
             </div>
 
-            <div class="location-breakdown" id="locationBreakdown">
-                <h3>📍 Breakdown by Location</h3>
-                <div id="locationCards"></div>
-            </div>
-
             <h3 style="margin-top: 30px;">Recent Activities</h3>
             <div id="recentActivities" style="margin-top: 15px;">
                 <p style="color: #666;">No recent activities</p>
@@ -581,15 +511,6 @@
             <h2>Inventory Management</h2>
             <button class="btn" onclick="showAddItemModal()">➕ Add New Item</button>
             <button class="btn btn-success" onclick="showAdjustPriceModal()">💵 Adjust Prices</button>
-            
-            <div class="form-grid" style="margin-top: 20px;">
-                <div class="form-group">
-                    <label>Filter by Location</label>
-                    <select id="inventoryLocationFilter" onchange="filterInventoryByLocation()">
-                        <option value="">All Locations</option>
-                    </select>
-                </div>
-            </div>
             
             <input type="text" class="search-box" id="searchInventory" placeholder="🔍 Search by name, variant, or location..." onkeyup="searchInventory()">
 
@@ -619,27 +540,27 @@
         <div id="sales" class="content">
             <h2>Record Sales</h2>
             <div class="form-grid">
-    <div class="form-group">
-        <label>Select Item</label>
-        <select id="saleItem" onchange="updateSaleLocation()">  <!-- CHANGED from calculateSaleTotal() -->
-            <option value="">Choose item...</option>
-        </select>
-    </div>
-    <div class="form-group">
-        <label>Location</label>
-        <select id="saleLocation" onchange="calculateSaleTotal()">  <!-- ADDED onchange -->
-            <option value="">Choose location...</option>
-        </select>
-    </div>
-    <div class="form-group">
-        <label>Quantity Sold</label>
-        <input type="number" id="saleQuantity" min="1" placeholder="Enter quantity" onchange="calculateSaleTotal()">
-    </div>
-    <div class="form-group">
-        <label>Transaction Date</label>
-        <input type="date" id="saleDate">
-    </div>
-</div>
+                <div class="form-group">
+                    <label>Select Item</label>
+                    <select id="saleItem" onchange="calculateSaleTotal()">
+                        <option value="">Choose item...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Quantity Sold</label>
+                    <input type="number" id="saleQuantity" min="1" placeholder="Enter quantity" onchange="calculateSaleTotal()">
+                </div>
+                <div class="form-group">
+                    <label>Location</label>
+                    <select id="saleLocation">
+                        <option value="">Choose location...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Transaction Date & Time</label>
+                    <input type="datetime-local" id="saleDateTime">
+                </div>
+            </div>
 
             <div class="form-group">
                 <label>Discount (Optional)</label>
@@ -683,11 +604,10 @@
             <button class="btn btn-success" onclick="recordSale()" style="margin-top: 15px;">✅ Record Sale</button>
 
             <h3 style="margin-top: 30px;">Sales History</h3>
-            <input type="text" class="search-box" id="searchSales" placeholder="🔍 Search sales by item name, variant, or location..." onkeyup="searchSales()">
             <table>
                 <thead>
                     <tr>
-                        <th>Date</th>
+                        <th>Date & Time</th>
                         <th>Item</th>
                         <th>Variant</th>
                         <th>Quantity</th>
@@ -712,7 +632,7 @@
             <div class="form-grid">
                 <div class="form-group">
                     <label>Select Item</label>
-                    <select id="transferItem" onchange="updateTransferLocations()">
+                    <select id="transferItem">
                         <option value="">Choose item...</option>
                     </select>
                 </div>
@@ -733,18 +653,17 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Transfer Date</label>
-                    <input type="date" id="transferDate">
+                    <label>Transfer Date & Time</label>
+                    <input type="datetime-local" id="transferDateTime">
                 </div>
             </div>
             <button class="btn btn-warning" onclick="transferItems()">🔄 Transfer Items</button>
 
             <h3 style="margin-top: 30px;">Transfer History</h3>
-            <input type="text" class="search-box" id="searchTransfers" placeholder="🔍 Search transfers by item name, variant, or location..." onkeyup="searchTransfers()">
             <table>
                 <thead>
                     <tr>
-                        <th>Date</th>
+                        <th>Date & Time</th>
                         <th>Item</th>
                         <th>Variant</th>
                         <th>Quantity</th>
@@ -798,20 +717,10 @@
                 <input type="file" id="csvFile" accept=".csv" onchange="handleFileUpload(event)">
             </div>
 
-            <div style="background: #d1ecf1; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #17a2b8;">
-                <p style="margin-bottom: 10px;"><strong>📋 CSV Format Requirements:</strong></p>
-                <p style="margin-bottom: 5px;"><strong>Columns:</strong> Name, Variant, Quantity, Min Stock, Status, Location, Price</p>
-                <p style="margin-bottom: 5px;"><strong>Example:</strong> iPhone 14 Pro, 128GB Black, 10, 5, In Stock, Main Store, 45000</p>
-                <p style="margin-top: 10px; color: #0c5460;"><strong>✅ Updated:</strong></p>
-                <ul style="margin-left: 20px; color: #0c5460;">
-                    <li>All items will be imported - NO duplicate restrictions!</li>
-                    <li>Make sure there are NO empty lines in your CSV</li>
-                    <li>The first row should be the header (column names)</li>
-                    <li>All 7 columns must be present in each row</li>
-                </ul>
-            </div>
-
-            <div id="importLog" class="import-log" style="display: none;"></div>
+            <p style="color: #666; margin-top: 10px; margin-bottom: 20px;">
+                <strong>Format:</strong> Name, Variant, Quantity, Min Stock, Status, Location, Price<br>
+                <strong>Example:</strong> iPhone 14 Pro, 128GB Black, 10, 5, In Stock, Main Store, 45000
+            </p>
 
             <div style="border-top: 2px solid #ddd; padding-top: 20px; margin-top: 30px;">
                 <h3 style="color: #dc3545; margin-bottom: 15px;">⚠️ Data Management</h3>
@@ -917,7 +826,6 @@
     <script>
         // Data storage
         let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
-        let productCatalog = JSON.parse(localStorage.getItem('productCatalog')) || [];
         let sales = JSON.parse(localStorage.getItem('sales')) || [];
         let transfers = JSON.parse(localStorage.getItem('transfers')) || [];
         let activities = JSON.parse(localStorage.getItem('activities')) || [];
@@ -926,7 +834,7 @@
         // Initialize
         window.onload = function() {
             checkLogin();
-            setDefaultDate();
+            setDefaultDateTime();
         };
 
         function checkLogin() {
@@ -951,10 +859,11 @@
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
 
+            // Simple authentication (in production, this should be server-side)
             if (email === 'admin@wawlyn.com' && password === 'admin123') {
                 localStorage.setItem('currentUser', email);
                 currentUser = email;
-                addActivity('User logged in: ' + email);
+                addActivity(`User logged in: ${email}`);
                 checkLogin();
             } else {
                 alert('Invalid email or password!');
@@ -963,25 +872,26 @@
 
         function logout() {
             if (confirm('Are you sure you want to logout?')) {
-                addActivity('User logged out: ' + currentUser);
+                addActivity(`User logged out: ${currentUser}`);
                 localStorage.removeItem('currentUser');
                 currentUser = null;
                 checkLogin();
             }
         }
 
-        function setDefaultDate() {
+        function setDefaultDateTime() {
             const now = new Date();
-            const dateStr = now.toISOString().slice(0, 10);
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            const dateTimeStr = now.toISOString().slice(0, 16);
             
-            if (document.getElementById('saleDate')) {
-                document.getElementById('saleDate').value = dateStr;
+            if (document.getElementById('saleDateTime')) {
+                document.getElementById('saleDateTime').value = dateTimeStr;
             }
-            if (document.getElementById('transferDate')) {
-                document.getElementById('transferDate').value = dateStr;
+            if (document.getElementById('transferDateTime')) {
+                document.getElementById('transferDateTime').value = dateTimeStr;
             }
             if (document.getElementById('reportDate')) {
-                document.getElementById('reportDate').value = dateStr;
+                document.getElementById('reportDate').value = now.toISOString().slice(0, 10);
             }
         }
 
@@ -992,7 +902,7 @@
             event.target.classList.add('active');
             
             if (tabName === 'sales' || tabName === 'transfer' || tabName === 'reports') {
-                setDefaultDate();
+                setDefaultDateTime();
             }
         }
 
@@ -1009,58 +919,37 @@
             document.getElementById(modalId).style.display = 'none';
         }
 
-        function formatDate(dateString) {
+        function formatDateTime(dateString) {
             const date = new Date(dateString);
-            return date.toLocaleDateString('en-US', {
+            return date.toLocaleString('en-US', {
                 year: 'numeric',
                 month: 'short',
-                day: 'numeric'
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
             });
         }
 
-        function getOrCreateProduct(name, variant) {
-            let product = productCatalog.find(p => p.name === name && p.variant === variant);
-            if (!product) {
-                product = {
-                    productId: Date.now(),
-                    name: name,
-                    variant: variant
-                };
-                productCatalog.push(product);
-            }
-            return product;
-        }
-
         function addItem() {
-            const name = document.getElementById('itemName').value;
-            const variant = document.getElementById('itemVariant').value;
-            const quantity = parseInt(document.getElementById('itemQuantity').value);
-            const minStock = parseInt(document.getElementById('itemMinStock').value);
-            const location = document.getElementById('itemLocation').value;
-            const price = parseFloat(document.getElementById('itemPrice').value);
+            const item = {
+                id: Date.now(),
+                name: document.getElementById('itemName').value,
+                variant: document.getElementById('itemVariant').value,
+                quantity: parseInt(document.getElementById('itemQuantity').value),
+                minStock: parseInt(document.getElementById('itemMinStock').value),
+                location: document.getElementById('itemLocation').value,
+                price: parseFloat(document.getElementById('itemPrice').value),
+                dateAdded: new Date().toISOString()
+            };
 
-            if (!name || !variant || !location) {
+            if (!item.name || !item.variant || !item.location) {
                 alert('Please fill all required fields');
                 return;
             }
 
-            const product = getOrCreateProduct(name, variant);
-
-            const item = {
-                id: Date.now(),
-                productId: product.productId,
-                name: name,
-                variant: variant,
-                quantity: quantity,
-                minStock: minStock,
-                location: location,
-                price: price,
-                dateAdded: new Date().toISOString()
-            };
-
             inventory.push(item);
             saveData();
-            addActivity('Added new item: ' + item.name + ' - ' + item.variant + ' at ' + item.location);
+            addActivity(`Added new item: ${item.name} - ${item.variant} at ${item.location}`);
             renderInventory();
             updateDashboard();
             updateSelects();
@@ -1083,7 +972,7 @@
                 const item = inventory.find(i => i.id === id);
                 inventory = inventory.filter(i => i.id !== id);
                 saveData();
-                addActivity('Deleted item: ' + item.name + ' - ' + item.variant);
+                addActivity(`Deleted item: ${item.name} - ${item.variant}`);
                 renderInventory();
                 updateDashboard();
                 updateSelects();
@@ -1102,44 +991,32 @@
             return 'status-out-of-stock';
         }
 
-        function renderInventory(filteredItems = null) {
+        function renderInventory() {
             const tbody = document.getElementById('inventoryBody');
-            const itemsToRender = filteredItems || inventory;
-            
-            if (itemsToRender.length === 0) {
+            if (inventory.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; color: #666;">No items in inventory</td></tr>';
                 return;
             }
 
-            tbody.innerHTML = itemsToRender.map(item => {
+            tbody.innerHTML = inventory.map(item => {
                 const status = getStatus(item);
-                return `<tr>
-                    <td>${item.name}</td>
-                    <td>${item.variant}</td>
-                    <td>${item.quantity}</td>
-                    <td>${item.minStock}</td>
-                    <td><span class="status-badge ${getStatusClass(status)}">${status}</span></td>
-                    <td>${item.location}</td>
-                    <td>TZS ${item.price.toLocaleString()}</td>
-                    <td class="date-display">${formatDate(item.dateAdded)}</td>
-                    <td>
-                        <button class="action-btn btn-warning" onclick="editItem(${item.id})" style="background: #ffc107; color: #000;">✏️ Edit</button>
-                        <button class="action-btn btn-danger" onclick="deleteItem(${item.id})">🗑️ Delete</button>
-                    </td>
-                </tr>`;
+                return `
+                    <tr>
+                        <td>${item.name}</td>
+                        <td>${item.variant}</td>
+                        <td>${item.quantity}</td>
+                        <td>${item.minStock}</td>
+                        <td><span class="status-badge ${getStatusClass(status)}">${status}</span></td>
+                        <td>${item.location}</td>
+                        <td>TZS ${item.price.toLocaleString()}</td>
+                        <td class="date-display">${formatDateTime(item.dateAdded)}</td>
+                        <td>
+                            <button class="action-btn btn-warning" onclick="editItem(${item.id})" style="background: #ffc107; color: #000;">✏️ Edit</button>
+                            <button class="action-btn btn-danger" onclick="deleteItem(${item.id})">🗑️ Delete</button>
+                        </td>
+                    </tr>
+                `;
             }).join('');
-        }
-
-        function filterInventoryByLocation() {
-            const selectedLocation = document.getElementById('inventoryLocationFilter').value;
-            
-            if (!selectedLocation) {
-                renderInventory();
-                return;
-            }
-            
-            const filtered = inventory.filter(item => item.location === selectedLocation);
-            renderInventory(filtered);
         }
 
         function searchInventory() {
@@ -1149,190 +1026,183 @@
                 item.variant.toLowerCase().includes(searchTerm) ||
                 item.location.toLowerCase().includes(searchTerm)
             );
-            renderInventory(filtered);
-        }
 
-        function searchSales() {
-            const searchTerm = document.getElementById('searchSales').value.toLowerCase();
-            const filtered = sales.filter(sale => 
-                sale.name.toLowerCase().includes(searchTerm) ||
-                sale.variant.toLowerCase().includes(searchTerm) ||
-                sale.location.toLowerCase().includes(searchTerm)
-            );
-            renderSales(filtered);
-        }
+            const tbody = document.getElementById('inventoryBody');
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; color: #666;">No matching items found</td></tr>';
+                return;
+            }
 
-        function searchTransfers() {
-            const searchTerm = document.getElementById('searchTransfers').value.toLowerCase();
-            const filtered = transfers.filter(transfer => 
-                transfer.name.toLowerCase().includes(searchTerm) ||
-                transfer.variant.toLowerCase().includes(searchTerm) ||
-                transfer.from.toLowerCase().includes(searchTerm) ||
-                transfer.to.toLowerCase().includes(searchTerm)
-            );
-            renderTransfers(filtered);
+            tbody.innerHTML = filtered.map(item => {
+                const status = getStatus(item);
+                return `
+                    <tr>
+                        <td>${item.name}</td>
+                        <td>${item.variant}</td>
+                        <td>${item.quantity}</td>
+                        <td>${item.minStock}</td>
+                        <td><span class="status-badge ${getStatusClass(status)}">${status}</span></td>
+                        <td>${item.location}</td>
+                        <td>TZS ${item.price.toLocaleString()}</td>
+                        <td class="date-display">${formatDateTime(item.dateAdded)}</td>
+                        <td>
+                            <button class="action-btn btn-warning" onclick="editItem(${item.id})" style="background: #ffc107; color: #000;">✏️ Edit</button>
+                            <button class="action-btn btn-danger" onclick="deleteItem(${item.id})">🗑️ Delete</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
         }
 
         function calculateSaleTotal() {
-            const productId = parseInt(document.getElementById('saleItem').value);
-    const location = document.getElementById('saleLocation').value;
-    const quantity = parseInt(document.getElementById('saleQuantity').value) || 0;
-    const discountValue = parseFloat(document.getElementById('discountValue').value) || 0;
-    const discountType = document.getElementById('discountType').value;
+            const itemId = parseInt(document.getElementById('saleItem').value);
+            const quantity = parseInt(document.getElementById('saleQuantity').value) || 0;
+            const discountValue = parseFloat(document.getElementById('discountValue').value) || 0;
+            const discountType = document.getElementById('discountType').value;
 
-    if (!productId || !location || !quantity) {
-        document.getElementById('salePriceSummary').style.display = 'none';
-        return;
-    }
+            if (!itemId || !quantity) {
+                document.getElementById('salePriceSummary').style.display = 'none';
+                return;
+            }
 
-    const item = inventory.find(i => i.productId === productId && i.location === location);
-    
-    if (!item) {
-        document.getElementById('salePriceSummary').style.display = 'none';
-        alert('Item not found in selected location!');
-        return;
-    }
+            const item = inventory.find(i => i.id === itemId);
+            if (!item) return;
 
-    const subtotal = item.price * quantity;
-    let discountAmount = 0;
+            const subtotal = item.price * quantity;
+            let discountAmount = 0;
 
-    if (discountValue > 0) {
-        if (discountType === 'percent') {
-            discountAmount = subtotal * (discountValue / 100);
-        } else {
-            discountAmount = discountValue;
+            if (discountValue > 0) {
+                if (discountType === 'percent') {
+                    discountAmount = subtotal * (discountValue / 100);
+                } else {
+                    discountAmount = discountValue;
+                }
+            }
+
+            const total = subtotal - discountAmount;
+
+            document.getElementById('summaryItem').textContent = `${item.name} - ${item.variant}`;
+            document.getElementById('summaryQuantity').textContent = quantity;
+            document.getElementById('summaryUnitPrice').textContent = `TZS ${item.price.toLocaleString()}`;
+            document.getElementById('summarySubtotal').textContent = `TZS ${subtotal.toLocaleString()}`;
+            
+            if (discountAmount > 0) {
+                document.getElementById('discountRow').style.display = 'flex';
+                const discountText = discountType === 'percent' 
+                    ? `-TZS ${discountAmount.toLocaleString()} (${discountValue}%)`
+                    : `-TZS ${discountAmount.toLocaleString()}`;
+                document.getElementById('summaryDiscount').textContent = discountText;
+            } else {
+                document.getElementById('discountRow').style.display = 'none';
+            }
+
+            document.getElementById('summaryTotal').textContent = `TZS ${total.toLocaleString()}`;
+            document.getElementById('salePriceSummary').style.display = 'block';
         }
-    }
-
-    const total = subtotal - discountAmount;
-
-    document.getElementById('summaryItem').textContent = item.name + ' - ' + item.variant;
-    document.getElementById('summaryLocation').textContent = location;
-    document.getElementById('summaryAvailableStock').textContent = item.quantity + ' units';
-    document.getElementById('summaryQuantity').textContent = quantity;
-    document.getElementById('summaryUnitPrice').textContent = 'TZS ' + item.price.toLocaleString();
-    document.getElementById('summarySubtotal').textContent = 'TZS ' + subtotal.toLocaleString();
-    
-    if (discountAmount > 0) {
-        document.getElementById('discountRow').style.display = 'flex';
-        const discountText = discountType === 'percent' 
-            ? '-TZS ' + discountAmount.toLocaleString() + ' (' + discountValue + '%)'
-            : '-TZS ' + discountAmount.toLocaleString();
-        document.getElementById('summaryDiscount').textContent = discountText;
-    } else {
-        document.getElementById('discountRow').style.display = 'none';
-    }
-
-    document.getElementById('summaryTotal').textContent = 'TZS ' + total.toLocaleString();
-    document.getElementById('salePriceSummary').style.display = 'block';
-}
 
         function recordSale() {
-               const productId = parseInt(document.getElementById('saleItem').value);
-    const quantity = parseInt(document.getElementById('saleQuantity').value);
-    const location = document.getElementById('saleLocation').value;
-    const date = document.getElementById('saleDate').value;
-    const discountValue = parseFloat(document.getElementById('discountValue').value) || 0;
-    const discountType = document.getElementById('discountType').value;
+            const itemId = parseInt(document.getElementById('saleItem').value);
+            const quantity = parseInt(document.getElementById('saleQuantity').value);
+            const location = document.getElementById('saleLocation').value;
+            const dateTime = document.getElementById('saleDateTime').value;
+            const discountValue = parseFloat(document.getElementById('discountValue').value) || 0;
+            const discountType = document.getElementById('discountType').value;
 
-    if (!productId || !quantity || !location || !date) {
-        alert('Please fill all required fields');
-        return;
-    }
+            if (!itemId || !quantity || !location || !dateTime) {
+                alert('Please fill all required fields');
+                return;
+            }
 
-    // FIXED: Find the specific item at this location using productId
-    const item = inventory.find(i => i.productId === productId && i.location === location);
-    
-    if (!item) {
-        alert('Item not found in selected location!');
-        return;
-    }
+            const item = inventory.find(i => i.id === itemId && i.location === location);
+            if (!item) {
+                alert('Item not found in selected location');
+                return;
+            }
 
-    if (item.quantity < quantity) {
-        alert('Insufficient stock! Only ' + item.quantity + ' available at ' + location);
-        return;
-    }
+            if (item.quantity < quantity) {
+                alert(`Insufficient stock! Only ${item.quantity} available`);
+                return;
+            }
 
             item.quantity -= quantity;
             
             const subtotal = item.price * quantity;
-    let discountAmount = 0;
+            let discountAmount = 0;
 
-    if (discountValue > 0) {
-        if (discountType === 'percent') {
-            discountAmount = subtotal * (discountValue / 100);
-        } else {
-            discountAmount = discountValue;
+            if (discountValue > 0) {
+                if (discountType === 'percent') {
+                    discountAmount = subtotal * (discountValue / 100);
+                } else {
+                    discountAmount = discountValue;
+                }
+            }
+
+            const sale = {
+                id: Date.now(),
+                itemId: item.id,
+                name: item.name,
+                variant: item.variant,
+                quantity: quantity,
+                price: item.price,
+                location: location,
+                discountAmount: discountAmount,
+                discountType: discountType,
+                discountValue: discountValue,
+                subtotal: subtotal,
+                total: subtotal - discountAmount,
+                date: new Date(dateTime).toISOString()
+            };
+
+            sales.push(sale);
+            saveData();
+            
+            const discountText = discountAmount > 0 
+                ? ` (Discount: ${discountType === 'percent' ? discountValue + '%' : 'TZS ' + discountAmount})`
+                : '';
+            addActivity(`Sale recorded: ${quantity}x ${item.name} - ${item.variant} at ${location}${discountText}`);
+            
+            renderSales();
+            renderInventory();
+            updateDashboard();
+            
+            document.getElementById('saleQuantity').value = '';
+            document.getElementById('discountValue').value = '';
+            document.getElementById('salePriceSummary').style.display = 'none';
+            setDefaultDateTime();
+            
+            alert('Sale recorded successfully!');
         }
-    }
 
-    const sale = {
-        id: Date.now(),
-        itemId: item.id,
-        productId: item.productId,
-        name: item.name,
-        variant: item.variant,
-        quantity: quantity,
-        price: item.price,
-        location: location,
-        discountAmount: discountAmount,
-        discountType: discountType,
-        discountValue: discountValue,
-        subtotal: subtotal,
-        total: subtotal - discountAmount,
-        date: new Date(date).toISOString()
-    };
-
-    sales.push(sale);
-    saveData();
-    
-    const discountText = discountAmount > 0 
-        ? ' (Discount: ' + (discountType === 'percent' ? discountValue + '%' : 'TZS ' + discountAmount) + ')'
-        : '';
-    addActivity('Sale recorded: ' + quantity + 'x ' + item.name + ' - ' + item.variant + ' at ' + location + discountText);
-    
-    renderSales();
-    renderInventory();
-    updateDashboard();
-    
-    // Reset form
-    document.getElementById('saleItem').value = '';
-    document.getElementById('saleLocation').innerHTML = '<option value="">Choose location...</option>';
-    document.getElementById('saleQuantity').value = '';
-    document.getElementById('discountValue').value = '';
-    document.getElementById('salePriceSummary').style.display = 'none';
-    setDefaultDate();
-    
-    alert('Sale recorded successfully!');
-}
-
-        function renderSales(filteredSales = null) {
+        function renderSales() {
             const tbody = document.getElementById('salesBody');
-            const salesToRender = filteredSales || sales;
 
-            if (salesToRender.length === 0) {
+            if (sales.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; color: #666;">No sales recorded</td></tr>';
                 return;
             }
 
-            tbody.innerHTML = salesToRender.slice(-50).reverse().map(sale => {
+            tbody.innerHTML = sales.slice(-50).reverse().map(sale => {
                 const discountText = sale.discountAmount > 0 
                     ? (sale.discountType === 'percent' 
-                        ? sale.discountValue + '% (TZS ' + sale.discountAmount.toLocaleString() + ')'
-                        : 'TZS ' + sale.discountAmount.toLocaleString())
+                        ? `${sale.discountValue}% (TZS ${sale.discountAmount.toLocaleString()})`
+                        : `TZS ${sale.discountAmount.toLocaleString()}`)
                     : '-';
 
-                return `<tr>
-                    <td class="date-display">${formatDate(sale.date)}</td>
-                    <td>${sale.name}</td>
-                    <td>${sale.variant}</td>
-                    <td>${sale.quantity}</td>
-                    <td>TZS ${sale.price.toLocaleString()}</td>
-                    <td style="color: ${sale.discountAmount > 0 ? '#28a745' : '#666'};">${discountText}</td>
-                    <td>${sale.location}</td>
-                    <td><strong>TZS ${sale.total.toLocaleString()}</strong></td>
-                    <td><button class="action-btn btn-danger" onclick="deleteSale(${sale.id})">🗑️ Delete</button></td>
-                </tr>`;
+                return `
+                    <tr>
+                        <td class="date-display">${formatDateTime(sale.date)}</td>
+                        <td>${sale.name}</td>
+                        <td>${sale.variant}</td>
+                        <td>${sale.quantity}</td>
+                        <td>TZS ${sale.price.toLocaleString()}</td>
+                        <td style="color: ${sale.discountAmount > 0 ? '#28a745' : '#666'};">${discountText}</td>
+                        <td>${sale.location}</td>
+                        <td><strong>TZS ${sale.total.toLocaleString()}</strong></td>
+                        <td>
+                            <button class="action-btn btn-danger" onclick="deleteSale(${sale.id})">🗑️ Delete</button>
+                        </td>
+                    </tr>
+                `;
             }).join('');
         }
 
@@ -1347,7 +1217,7 @@
                     
                     sales = sales.filter(s => s.id !== id);
                     saveData();
-                    addActivity('Deleted sale: ' + sale.quantity + 'x ' + sale.name + ' - ' + sale.variant);
+                    addActivity(`Deleted sale: ${sale.quantity}x ${sale.name} - ${sale.variant}`);
                     renderSales();
                     renderInventory();
                     updateDashboard();
@@ -1355,38 +1225,14 @@
             }
         }
 
-        function updateTransferLocations() {
-            const productId = parseInt(document.getElementById('transferItem').value);
-            const fromSelect = document.getElementById('transferFrom');
-            const toSelect = document.getElementById('transferTo');
-            
-            if (!productId) {
-                fromSelect.innerHTML = '<option value="">Choose location...</option>';
-                toSelect.innerHTML = '<option value="">Choose location...</option>';
-                return;
-            }
-
-            const locationsWithStock = inventory
-                .filter(i => i.productId === productId && i.quantity > 0)
-                .map(i => i.location);
-            
-            const allLocations = [...new Set(inventory.map(i => i.location))];
-            
-            fromSelect.innerHTML = '<option value="">Choose location...</option>' + 
-                locationsWithStock.map(loc => `<option value="${loc}">${loc}</option>`).join('');
-            
-            toSelect.innerHTML = '<option value="">Choose location...</option>' + 
-                allLocations.map(loc => `<option value="${loc}">${loc}</option>`).join('');
-        }
-
         function transferItems() {
-            const productId = parseInt(document.getElementById('transferItem').value);
+            const itemId = parseInt(document.getElementById('transferItem').value);
             const quantity = parseInt(document.getElementById('transferQuantity').value);
             const fromLocation = document.getElementById('transferFrom').value;
             const toLocation = document.getElementById('transferTo').value;
-            const date = document.getElementById('transferDate').value;
+            const dateTime = document.getElementById('transferDateTime').value;
 
-            if (!productId || !quantity || !fromLocation || !toLocation || !date) {
+            if (!itemId || !quantity || !fromLocation || !toLocation || !dateTime) {
                 alert('Please fill all fields');
                 return;
             }
@@ -1396,7 +1242,7 @@
                 return;
             }
 
-            const fromItem = inventory.find(i => i.productId === productId && i.location === fromLocation);
+            const fromItem = inventory.find(i => i.id === itemId && i.location === fromLocation);
             if (!fromItem || fromItem.quantity < quantity) {
                 alert('Insufficient stock in source location');
                 return;
@@ -1404,86 +1250,72 @@
 
             fromItem.quantity -= quantity;
 
-            let toItem = inventory.find(i => i.productId === productId && i.location === toLocation);
+            let toItem = inventory.find(i => i.id === itemId && i.location === toLocation);
             if (toItem) {
                 toItem.quantity += quantity;
             } else {
-                toItem = {
-                    id: Date.now(),
-                    productId: productId,
-                    name: fromItem.name,
-                    variant: fromItem.variant,
-                    quantity: quantity,
-                    minStock: fromItem.minStock,
-                    location: toLocation,
-                    price: fromItem.price,
-                    dateAdded: new Date().toISOString()
-                };
+                toItem = {...fromItem, id: Date.now(), location: toLocation, quantity: quantity, dateAdded: new Date().toISOString()};
                 inventory.push(toItem);
             }
 
             const transfer = {
                 id: Date.now(),
-                productId: productId,
+                itemId: itemId,
                 name: fromItem.name,
                 variant: fromItem.variant,
                 quantity: quantity,
                 from: fromLocation,
                 to: toLocation,
-                date: new Date(date).toISOString()
+                date: new Date(dateTime).toISOString()
             };
 
             transfers.push(transfer);
             saveData();
-            addActivity('Transfer: ' + quantity + 'x ' + fromItem.name + ' from ' + fromLocation + ' to ' + toLocation);
+            addActivity(`Transfer: ${quantity}x ${fromItem.name} from ${fromLocation} to ${toLocation}`);
             renderTransfers();
             renderInventory();
             updateDashboard();
-            updateSelects();
             
             document.getElementById('transferQuantity').value = '';
-            document.getElementById('transferItem').value = '';
-            document.getElementById('transferFrom').innerHTML = '<option value="">Choose location...</option>';
-            document.getElementById('transferTo').innerHTML = '<option value="">Choose location...</option>';
-            setDefaultDate();
+            setDefaultDateTime();
             alert('Transfer completed successfully!');
         }
 
-        function renderTransfers(filteredTransfers = null) {
+        function renderTransfers() {
             const tbody = document.getElementById('transferBody');
-            const transfersToRender = filteredTransfers || transfers;
-
-            if (transfersToRender.length === 0) {
+            if (transfers.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #666;">No transfers recorded</td></tr>';
                 return;
             }
 
-            tbody.innerHTML = transfersToRender.slice(-50).reverse().map(transfer => 
-                `<tr>
-                    <td class="date-display">${formatDate(transfer.date)}</td>
+            tbody.innerHTML = transfers.slice(-50).reverse().map(transfer => `
+                <tr>
+                    <td class="date-display">${formatDateTime(transfer.date)}</td>
                     <td>${transfer.name}</td>
                     <td>${transfer.variant}</td>
                     <td>${transfer.quantity}</td>
                     <td>${transfer.from}</td>
                     <td>${transfer.to}</td>
-                    <td><button class="action-btn btn-danger" onclick="deleteTransfer(${transfer.id})">🗑️ Delete</button></td>
-                </tr>`
-            ).join('');
+                    <td>
+                        <button class="action-btn btn-danger" onclick="deleteTransfer(${transfer.id})">🗑️ Delete</button>
+                    </td>
+                </tr>
+            `).join('');
         }
 
         function deleteTransfer(id) {
             if (confirm('Delete this transfer record? This will reverse the transfer.')) {
                 const transfer = transfers.find(t => t.id === id);
                 if (transfer) {
-                    const fromItem = inventory.find(i => i.productId === transfer.productId && i.location === transfer.from);
-                    const toItem = inventory.find(i => i.productId === transfer.productId && i.location === transfer.to);
+                    const fromItem = inventory.find(i => i.name === transfer.name && i.variant === transfer.variant && i.location === transfer.from);
+                    const toItem = inventory.find(i => i.name === transfer.name && i.variant === transfer.variant && i.location === transfer.to);
                     
                     if (fromItem) fromItem.quantity += transfer.quantity;
                     if (toItem) toItem.quantity -= transfer.quantity;
                     
                     transfers = transfers.filter(t => t.id !== id);
                     saveData();
-                    addActivity('Deleted transfer: ' + transfer.quantity + 'x ' + transfer.name + ' from ' + transfer.from + ' to ' + transfer.to);
+                    addActivity(`Deleted transfer: ${transfer.quantity}x ${transfer.name} from ${transfer.from} to ${transfer.to}`);
                     renderTransfers();
                     renderInventory();
                     updateDashboard();
@@ -1493,30 +1325,33 @@
 
         function updateSelects() {
             const saleItemSelect = document.getElementById('saleItem');
+            const transferItemSelect = document.getElementById('transferItem');
+            const locations = [...new Set(inventory.map(i => i.location))];
+
             const itemOptions = inventory.map(item => 
                 `<option value="${item.id}">${item.name} - ${item.variant} (${item.location})</option>`
             ).join('');
+
             saleItemSelect.innerHTML = '<option value="">Choose item...</option>' + itemOptions;
+            transferItemSelect.innerHTML = '<option value="">Choose item...</option>' + 
+                [...new Set(inventory.map(i => JSON.stringify({id: i.id, name: i.name, variant: i.variant})))]
+                .map(s => JSON.parse(s))
+                .map(item => `<option value="${item.id}">${item.name} - ${item.variant}</option>`).join('');
 
-            const transferItemSelect = document.getElementById('transferItem');
-            const uniqueProducts = [...new Map(productCatalog.map(p => [p.productId, p])).values()];
-            const transferOptions = uniqueProducts.map(product => 
-                `<option value="${product.productId}">${product.name} - ${product.variant}</option>`
-            ).join('');
-            transferItemSelect.innerHTML = '<option value="">Choose item...</option>' + transferOptions;
-
-            const allLocations = [...new Set(inventory.map(i => i.location))];
+            const predefinedLocations = ['Main Store', 'Branch 1', 'Kariakoo', 'Warehouse'];
+            const allLocations = [...new Set([...predefinedLocations, ...locations])];
             const locationOptions = allLocations.map(loc => `<option value="${loc}">${loc}</option>`).join('');
             
             document.getElementById('saleLocation').innerHTML = '<option value="">Choose location...</option>' + locationOptions;
+            document.getElementById('transferFrom').innerHTML = '<option value="">Choose location...</option>' + locationOptions;
+            document.getElementById('transferTo').innerHTML = '<option value="">Choose location...</option>' + locationOptions;
             document.getElementById('reportLocation').innerHTML = '<option value="">All Locations</option>' + locationOptions;
-            document.getElementById('inventoryLocationFilter').innerHTML = '<option value="">All Locations</option>' + locationOptions;
         }
 
         function updatePriceAdjustSelect() {
             const select = document.getElementById('priceAdjustItem');
             const options = inventory.map(item => 
-                `<option value="${item.id}">${item.name} - ${item.variant} (${item.location}) - Current: TZS ${item.price}</option>`
+                `<option value="${item.id}">${item.name} - ${item.variant} (Current: TZS ${item.price})</option>`
             ).join('');
             select.innerHTML = '<option value="">Choose item...</option>' + options;
         }
@@ -1530,17 +1365,18 @@
                 return;
             }
 
-            const item = inventory.find(i => i.id === itemId);
-            if (item) {
-                const oldPrice = item.price;
-                item.price = newPrice;
-                addActivity('Price adjusted for ' + item.name + ' - ' + item.variant + ' at ' + item.location + ': TZS ' + oldPrice + ' → TZS ' + newPrice);
-                saveData();
-                renderInventory();
-                updateDashboard();
-                closeModal('adjustPriceModal');
-                alert('Price updated successfully!');
-            }
+            inventory.forEach(item => {
+                if (item.id === itemId) {
+                    const oldPrice = item.price;
+                    item.price = newPrice;
+                    addActivity(`Price adjusted for ${item.name} - ${item.variant}: TZS ${oldPrice} → TZS ${newPrice}`);
+                }
+            });
+
+            saveData();
+            renderInventory();
+            closeModal('adjustPriceModal');
+            alert('Price updated successfully!');
         }
 
         function editItem(id) {
@@ -1564,7 +1400,7 @@
             
             if (!item) return;
 
-            const oldData = item.name + ' - ' + item.variant;
+            const oldData = `${item.name} - ${item.variant}`;
             
             item.name = document.getElementById('editItemName').value;
             item.variant = document.getElementById('editItemVariant').value;
@@ -1579,9 +1415,8 @@
             }
 
             saveData();
-            addActivity('Updated item: ' + oldData + ' → ' + item.name + ' - ' + item.variant);
+            addActivity(`Updated item: ${oldData} → ${item.name} - ${item.variant}`);
             renderInventory();
-            updateDashboard();
             closeModal('editItemModal');
             alert('Item updated successfully!');
         }
@@ -1592,57 +1427,21 @@
             document.getElementById('lowStockItems').textContent = inventory.filter(item => item.quantity <= item.minStock).length;
             document.getElementById('totalValue').textContent = 'TZS ' + inventory.reduce((sum, item) => sum + (item.quantity * item.price), 0).toLocaleString();
 
-            const locations = [...new Set(inventory.map(i => i.location))];
-            const locationCardsDiv = document.getElementById('locationCards');
-            
-            if (locations.length === 0) {
-                locationCardsDiv.innerHTML = '<p style="color: #666; text-align: center;">No locations yet</p>';
-            } else {
-                locationCardsDiv.innerHTML = locations.map(location => {
-                    const locationItems = inventory.filter(i => i.location === location);
-                    const totalItems = locationItems.length;
-                    const totalStock = locationItems.reduce((sum, item) => sum + item.quantity, 0);
-                    const lowStock = locationItems.filter(item => item.quantity <= item.minStock).length;
-                    const totalValue = locationItems.reduce((sum, item) => sum + (item.quantity * item.price), 0);
-                    
-                    return `<div class="location-card">
-                        <h4>📍 ${location}</h4>
-                        <div class="location-stats">
-                            <div class="location-stat">
-                                <label>Items</label>
-                                <div class="stat-value">${totalItems}</div>
-                            </div>
-                            <div class="location-stat">
-                                <label>Total Stock</label>
-                                <div class="stat-value">${totalStock}</div>
-                            </div>
-                            <div class="location-stat">
-                                <label>Low Stock</label>
-                                <div class="stat-value" style="color: ${lowStock > 0 ? '#dc3545' : '#28a745'};">${lowStock}</div>
-                            </div>
-                            <div class="location-stat">
-                                <label>Value</label>
-                                <div class="stat-value">TZS ${totalValue.toLocaleString()}</div>
-                            </div>
-                        </div>
-                    </div>`;
-                }).join('');
-            }
-
             const activitiesDiv = document.getElementById('recentActivities');
             if (activities.length === 0) {
                 activitiesDiv.innerHTML = '<p style="color: #666;">No recent activities</p>';
             } else {
                 activitiesDiv.innerHTML = activities.slice(-10).reverse().map(activity => 
                     `<div style="padding: 10px; border-left: 3px solid #667eea; margin-bottom: 10px; background: #f8f9fa;">
-                        <small style="color: #666;">${formatDate(activity.date)}</small><br>${activity.text}
+                        <small style="color: #666;">${formatDateTime(activity.date)}</small><br>
+                        ${activity.text}
                     </div>`
                 ).join('');
             }
         }
 
         function addActivity(text) {
-            activities.push({ text: text, date: new Date().toISOString() });
+            activities.push({ text, date: new Date().toISOString() });
             if (activities.length > 100) activities = activities.slice(-100);
             saveData();
             updateDashboard();
@@ -1672,87 +1471,93 @@
             const reportTitle = reportDate ? new Date(reportDate).toLocaleDateString() : 'All Time';
             const locationTitle = reportLocation || 'All Locations';
 
-            let lowStockInventory = inventory.filter(item => item.quantity <= item.minStock);
-            if (reportLocation) {
-                lowStockInventory = lowStockInventory.filter(i => i.location === reportLocation);
-            }
+            const report = `
+                <div style="padding: 30px; background: white;">
+                    <div style="text-align: center; margin-bottom: 30px;">
+                        <img src="logo.jpg" alt="WAWLYN Logo" style="max-width: 200px; margin-bottom: 20px;">
+                        <h1 style="color: #667eea;">WAWLYN Limited</h1>
+                        <h2>End of Day Report</h2>
+                        <p><strong>Date:</strong> ${reportTitle}</p>
+                        <p><strong>Location:</strong> ${locationTitle}</p>
+                        <p><strong>Generated:</strong> ${formatDateTime(new Date().toISOString())}</p>
+                    </div>
 
-            const report = `<div style="padding: 30px; background: white;">
-                <div style="text-align: center; margin-bottom: 30px;">
-                    <h1 style="color: #667eea; font-size: 2.5em;">WAWLYN</h1>
-                    <h1 style="color: #667eea;">WAWLYN Limited</h1>
-                    <h2>End of Day Report</h2>
-                    <p><strong>Date:</strong> ${reportTitle}</p>
-                    <p><strong>Location:</strong> ${locationTitle}</p>
-                    <p><strong>Generated:</strong> ${formatDate(new Date().toISOString())}</p>
+                    <div style="margin-bottom: 30px;">
+                        <h3>Sales Summary</h3>
+                        <table style="width: 100%; border: 1px solid #ddd;">
+                            <tr><td style="padding: 10px;"><strong>Total Sales:</strong></td><td style="padding: 10px;">${filteredSales.length}</td></tr>
+                            <tr><td style="padding: 10px;"><strong>Items Sold:</strong></td><td style="padding: 10px;">${totalItemsSold}</td></tr>
+                            <tr><td style="padding: 10px;"><strong>Gross Revenue:</strong></td><td style="padding: 10px;">TZS ${grossRevenue.toLocaleString()}</td></tr>
+                            <tr><td style="padding: 10px;"><strong>Total Discounts:</strong></td><td style="padding: 10px; color: #28a745;">-TZS ${totalDiscount.toLocaleString()}</td></tr>
+                            <tr style="background: #f8f9fa;"><td style="padding: 10px;"><strong>Net Revenue:</strong></td><td style="padding: 10px;"><strong>TZS ${totalRevenue.toLocaleString()}</strong></td></tr>
+                        </table>
+                    </div>
+
+                    <div style="margin-bottom: 30px;">
+                        <h3>Detailed Sales</h3>
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background: #667eea; color: white;">
+                                    <th style="padding: 10px; border: 1px solid #ddd;">Date & Time</th>
+                                    <th style="padding: 10px; border: 1px solid #ddd;">Item</th>
+                                    <th style="padding: 10px; border: 1px solid #ddd;">Qty</th>
+                                    <th style="padding: 10px; border: 1px solid #ddd;">Price</th>
+                                    <th style="padding: 10px; border: 1px solid #ddd;">Subtotal</th>
+                                    <th style="padding: 10px; border: 1px solid #ddd;">Discount</th>
+                                    <th style="padding: 10px; border: 1px solid #ddd;">Total</th>
+                                    <th style="padding: 10px; border: 1px solid #ddd;">Location</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${filteredSales.map(sale => {
+                                    const discountText = sale.discountAmount > 0 
+                                        ? `-TZS ${sale.discountAmount.toLocaleString()}`
+                                        : '-';
+                                    return `
+                                        <tr>
+                                            <td style="padding: 10px; border: 1px solid #ddd;">${formatDateTime(sale.date)}</td>
+                                            <td style="padding: 10px; border: 1px solid #ddd;">${sale.name} - ${sale.variant}</td>
+                                            <td style="padding: 10px; border: 1px solid #ddd;">${sale.quantity}</td>
+                                            <td style="padding: 10px; border: 1px solid #ddd;">TZS ${sale.price.toLocaleString()}</td>
+                                            <td style="padding: 10px; border: 1px solid #ddd;">TZS ${(sale.subtotal || sale.total).toLocaleString()}</td>
+                                            <td style="padding: 10px; border: 1px solid #ddd; color: #28a745;">${discountText}</td>
+                                            <td style="padding: 10px; border: 1px solid #ddd;"><strong>TZS ${sale.total.toLocaleString()}</strong></td>
+                                            <td style="padding: 10px; border: 1px solid #ddd;">${sale.location}</td>
+                                        </tr>
+                                    `;
+                                }).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div style="margin-bottom: 30px;">
+                        <h3>Low Stock Alerts</h3>
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background: #ffc107;">
+                                    <th style="padding: 10px; border: 1px solid #ddd;">Item</th>
+                                    <th style="padding: 10px; border: 1px solid #ddd;">Current Stock</th>
+                                    <th style="padding: 10px; border: 1px solid #ddd;">Min Stock</th>
+                                    <th style="padding: 10px; border: 1px solid #ddd;">Location</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${inventory.filter(item => item.quantity <= item.minStock).map(item => `
+                                    <tr>
+                                        <td style="padding: 10px; border: 1px solid #ddd;">${item.name} - ${item.variant}</td>
+                                        <td style="padding: 10px; border: 1px solid #ddd;">${item.quantity}</td>
+                                        <td style="padding: 10px; border: 1px solid #ddd;">${item.minStock}</td>
+                                        <td style="padding: 10px; border: 1px solid #ddd;">${item.location}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div style="margin-bottom: 30px;">
-                    <h3>Sales Summary</h3>
-                    <table style="width: 100%; border: 1px solid #ddd;">
-                        <tr><td style="padding: 10px;"><strong>Total Sales:</strong></td><td style="padding: 10px;">${filteredSales.length}</td></tr>
-                        <tr><td style="padding: 10px;"><strong>Items Sold:</strong></td><td style="padding: 10px;">${totalItemsSold}</td></tr>
-                        <tr><td style="padding: 10px;"><strong>Gross Revenue:</strong></td><td style="padding: 10px;">TZS ${grossRevenue.toLocaleString()}</td></tr>
-                        <tr><td style="padding: 10px;"><strong>Total Discounts:</strong></td><td style="padding: 10px; color: #28a745;">-TZS ${totalDiscount.toLocaleString()}</td></tr>
-                        <tr style="background: #f8f9fa;"><td style="padding: 10px;"><strong>Net Revenue:</strong></td><td style="padding: 10px;"><strong>TZS ${totalRevenue.toLocaleString()}</strong></td></tr>
-                    </table>
-                </div>
-                ${filteredSales.length > 0 ? `<div style="margin-bottom: 30px;">
-                    <h3>Detailed Sales</h3>
-                    <table style="width: 100%; border-collapse: collapse;">
-                        <thead>
-                            <tr style="background: #667eea; color: white;">
-                                <th style="padding: 10px; border: 1px solid #ddd;">Date</th>
-                                <th style="padding: 10px; border: 1px solid #ddd;">Item</th>
-                                <th style="padding: 10px; border: 1px solid #ddd;">Qty</th>
-                                <th style="padding: 10px; border: 1px solid #ddd;">Price</th>
-                                <th style="padding: 10px; border: 1px solid #ddd;">Subtotal</th>
-                                <th style="padding: 10px; border: 1px solid #ddd;">Discount</th>
-                                <th style="padding: 10px; border: 1px solid #ddd;">Total</th>
-                                <th style="padding: 10px; border: 1px solid #ddd;">Location</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${filteredSales.map(sale => {
-                                const discountText = sale.discountAmount > 0 ? '-TZS ' + sale.discountAmount.toLocaleString() : '-';
-                                return `<tr>
-                                    <td style="padding: 10px; border: 1px solid #ddd;">${formatDate(sale.date)}</td>
-                                    <td style="padding: 10px; border: 1px solid #ddd;">${sale.name} - ${sale.variant}</td>
-                                    <td style="padding: 10px; border: 1px solid #ddd;">${sale.quantity}</td>
-                                    <td style="padding: 10px; border: 1px solid #ddd;">TZS ${sale.price.toLocaleString()}</td>
-                                    <td style="padding: 10px; border: 1px solid #ddd;">TZS ${(sale.subtotal || sale.total).toLocaleString()}</td>
-                                    <td style="padding: 10px; border: 1px solid #ddd; color: #28a745;">${discountText}</td>
-                                    <td style="padding: 10px; border: 1px solid #ddd;"><strong>TZS ${sale.total.toLocaleString()}</strong></td>
-                                    <td style="padding: 10px; border: 1px solid #ddd;">${sale.location}</td>
-                                </tr>`;
-                            }).join('')}
-                        </tbody>
-                    </table>
-                </div>` : '<p style="text-align: center; color: #666;">No sales for this period/location</p>'}
-                ${lowStockInventory.length > 0 ? `<div style="margin-bottom: 30px;">
-                    <h3>Low Stock Alerts</h3>
-                    <table style="width: 100%; border-collapse: collapse;">
-                        <thead>
-                            <tr style="background: #ffc107;">
-                                <th style="padding: 10px; border: 1px solid #ddd;">Item</th>
-                                <th style="padding: 10px; border: 1px solid #ddd;">Current Stock</th>
-                                <th style="padding: 10px; border: 1px solid #ddd;">Min Stock</th>
-                                <th style="padding: 10px; border: 1px solid #ddd;">Location</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${lowStockInventory.map(item => `<tr>
-                                <td style="padding: 10px; border: 1px solid #ddd;">${item.name} - ${item.variant}</td>
-                                <td style="padding: 10px; border: 1px solid #ddd;">${item.quantity}</td>
-                                <td style="padding: 10px; border: 1px solid #ddd;">${item.minStock}</td>
-                                <td style="padding: 10px; border: 1px solid #ddd;">${item.location}</td>
-                            </tr>`).join('')}
-                        </tbody>
-                    </table>
-                </div>` : ''}
-            </div>`;
+            `;
 
             document.getElementById('reportContainer').innerHTML = report;
-            setTimeout(function() { window.print(); }, 500);
+            setTimeout(() => window.print(), 500);
         }
 
         function generateInventoryReport() {
@@ -1765,47 +1570,53 @@
 
             const locationTitle = reportLocation || 'All Locations';
 
-            const report = `<div style="padding: 30px; background: white;">
-                <div style="text-align: center; margin-bottom: 30px;">
-                    <h1 style="color: #667eea; font-size: 2.5em;">WAWLYN</h1>
-                    <h1 style="color: #667eea;">WAWLYN Limited</h1>
-                    <h2>Full Inventory Report</h2>
-                    <p><strong>Location:</strong> ${locationTitle}</p>
-                    <p><strong>Generated:</strong> ${formatDate(new Date().toISOString())}</p>
+            const report = `
+                <div style="padding: 30px; background: white;">
+                    <div style="text-align: center; margin-bottom: 30px;">
+                        <img src="logo.jpg" alt="WAWLYN Logo" style="max-width: 200px; margin-bottom: 20px;">
+                        <h1 style="color: #667eea;">WAWLYN Limited</h1>
+                        <h2>Full Inventory Report</h2>
+                        <p><strong>Location:</strong> ${locationTitle}</p>
+                        <p><strong>Generated:</strong> ${formatDateTime(new Date().toISOString())}</p>
+                    </div>
+
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: #667eea; color: white;">
+                                <th style="padding: 10px; border: 1px solid #ddd;">Name</th>
+                                <th style="padding: 10px; border: 1px solid #ddd;">Variant</th>
+                                <th style="padding: 10px; border: 1px solid #ddd;">Quantity</th>
+                                <th style="padding: 10px; border: 1px solid #ddd;">Min Stock</th>
+                                <th style="padding: 10px; border: 1px solid #ddd;">Location</th>
+                                <th style="padding: 10px; border: 1px solid #ddd;">Price</th>
+                                <th style="padding: 10px; border: 1px solid #ddd;">Value</th>
+                                <th style="padding: 10px; border: 1px solid #ddd;">Date Added</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${filteredInventory.map(item => `
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">${item.name}</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">${item.variant}</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">${item.quantity}</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">${item.minStock}</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">${item.location}</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">TZS ${item.price.toLocaleString()}</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">TZS ${(item.quantity * item.price).toLocaleString()}</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">${formatDateTime(item.dateAdded)}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+
+                    <div style="margin-top: 30px; text-align: right;">
+                        <h3>Total Inventory Value: TZS ${filteredInventory.reduce((sum, item) => sum + (item.quantity * item.price), 0).toLocaleString()}</h3>
+                    </div>
                 </div>
-                ${filteredInventory.length > 0 ? `<table style="width: 100%; border-collapse: collapse;">
-                    <thead>
-                        <tr style="background: #667eea; color: white;">
-                            <th style="padding: 10px; border: 1px solid #ddd;">Name</th>
-                            <th style="padding: 10px; border: 1px solid #ddd;">Variant</th>
-                            <th style="padding: 10px; border: 1px solid #ddd;">Quantity</th>
-                            <th style="padding: 10px; border: 1px solid #ddd;">Min Stock</th>
-                            <th style="padding: 10px; border: 1px solid #ddd;">Location</th>
-                            <th style="padding: 10px; border: 1px solid #ddd;">Price</th>
-                            <th style="padding: 10px; border: 1px solid #ddd;">Value</th>
-                            <th style="padding: 10px; border: 1px solid #ddd;">Date Added</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${filteredInventory.map(item => `<tr>
-                            <td style="padding: 10px; border: 1px solid #ddd;">${item.name}</td>
-                            <td style="padding: 10px; border: 1px solid #ddd;">${item.variant}</td>
-                            <td style="padding: 10px; border: 1px solid #ddd;">${item.quantity}</td>
-                            <td style="padding: 10px; border: 1px solid #ddd;">${item.minStock}</td>
-                            <td style="padding: 10px; border: 1px solid #ddd;">${item.location}</td>
-                            <td style="padding: 10px; border: 1px solid #ddd;">TZS ${item.price.toLocaleString()}</td>
-                            <td style="padding: 10px; border: 1px solid #ddd;">TZS ${(item.quantity * item.price).toLocaleString()}</td>
-                            <td style="padding: 10px; border: 1px solid #ddd;">${formatDate(item.dateAdded)}</td>
-                        </tr>`).join('')}
-                    </tbody>
-                </table>
-                <div style="margin-top: 30px; text-align: right;">
-                    <h3>Total Inventory Value: TZS ${filteredInventory.reduce((sum, item) => sum + (item.quantity * item.price), 0).toLocaleString()}</h3>
-                </div>` : '<p style="text-align: center; color: #666;">No inventory items for this location</p>'}
-            </div>`;
+            `;
 
             document.getElementById('reportContainer').innerHTML = report;
-            setTimeout(function() { window.print(); }, 500);
+            setTimeout(() => window.print(), 500);
         }
 
         function generateSalesReport() {
@@ -1828,42 +1639,48 @@
             const reportTitle = reportDate ? new Date(reportDate).toLocaleDateString() : 'All Time';
             const locationTitle = reportLocation || 'All Locations';
 
-            const report = `<div style="padding: 30px; background: white;">
-                <div style="text-align: center; margin-bottom: 30px;">
-                    <h1 style="color: #667eea; font-size: 2.5em;">WAWLYN</h1>
-                    <h1 style="color: #667eea;">WAWLYN Limited</h1>
-                    <h2>Sales Report</h2>
-                    <p><strong>Period:</strong> ${reportTitle}</p>
-                    <p><strong>Location:</strong> ${locationTitle}</p>
-                    <p><strong>Generated:</strong> ${formatDate(new Date().toISOString())}</p>
+            const report = `
+                <div style="padding: 30px; background: white;">
+                    <div style="text-align: center; margin-bottom: 30px;">
+                        <img src="logo.jpg" alt="WAWLYN Logo" style="max-width: 200px; margin-bottom: 20px;">
+                        <h1 style="color: #667eea;">WAWLYN Limited</h1>
+                        <h2>Sales Report</h2>
+                        <p><strong>Period:</strong> ${reportTitle}</p>
+                        <p><strong>Location:</strong> ${locationTitle}</p>
+                        <p><strong>Generated:</strong> ${formatDateTime(new Date().toISOString())}</p>
+                    </div>
+
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: #667eea; color: white;">
+                                <th style="padding: 10px; border: 1px solid #ddd;">Date & Time</th>
+                                <th style="padding: 10px; border: 1px solid #ddd;">Item</th>
+                                <th style="padding: 10px; border: 1px solid #ddd;">Quantity</th>
+                                <th style="padding: 10px; border: 1px solid #ddd;">Total</th>
+                                <th style="padding: 10px; border: 1px solid #ddd;">Location</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${filteredSales.map(sale => `
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">${formatDateTime(sale.date)}</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">${sale.name} - ${sale.variant}</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">${sale.quantity}</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">TZS ${sale.total.toLocaleString()}</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">${sale.location}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+
+                    <div style="margin-top: 30px; text-align: right;">
+                        <h3>Total Revenue: TZS ${totalRevenue.toLocaleString()}</h3>
+                    </div>
                 </div>
-                ${filteredSales.length > 0 ? `<table style="width: 100%; border-collapse: collapse;">
-                    <thead>
-                        <tr style="background: #667eea; color: white;">
-                            <th style="padding: 10px; border: 1px solid #ddd;">Date</th>
-                            <th style="padding: 10px; border: 1px solid #ddd;">Item</th>
-                            <th style="padding: 10px; border: 1px solid #ddd;">Quantity</th>
-                            <th style="padding: 10px; border: 1px solid #ddd;">Total</th>
-                            <th style="padding: 10px; border: 1px solid #ddd;">Location</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${filteredSales.map(sale => `<tr>
-                            <td style="padding: 10px; border: 1px solid #ddd;">${formatDate(sale.date)}</td>
-                            <td style="padding: 10px; border: 1px solid #ddd;">${sale.name} - ${sale.variant}</td>
-                            <td style="padding: 10px; border: 1px solid #ddd;">${sale.quantity}</td>
-                            <td style="padding: 10px; border: 1px solid #ddd;">TZS ${sale.total.toLocaleString()}</td>
-                            <td style="padding: 10px; border: 1px solid #ddd;">${sale.location}</td>
-                        </tr>`).join('')}
-                    </tbody>
-                </table>
-                <div style="margin-top: 30px; text-align: right;">
-                    <h3>Total Revenue: TZS ${totalRevenue.toLocaleString()}</h3>
-                </div>` : '<p style="text-align: center; color: #666;">No sales for this period/location</p>'}
-            </div>`;
+            `;
 
             document.getElementById('reportContainer').innerHTML = report;
-            setTimeout(function() { window.print(); }, 500);
+            setTimeout(() => window.print(), 500);
         }
 
         function downloadTemplate() {
@@ -1876,158 +1693,51 @@
             a.click();
         }
 
-        // IMPROVED CSV IMPORT FUNCTION - NO DUPLICATE RESTRICTIONS
         function handleFileUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
 
-            const logDiv = document.getElementById('importLog');
-            logDiv.style.display = 'block';
-            logDiv.innerHTML = '<div class="info">📥 Starting import...</div>';
-
             const reader = new FileReader();
             reader.onload = function(e) {
                 const csv = e.target.result;
-                const lines = csv.split('\n').map(line => line.trim()).filter(line => line.length > 0);
-                
+                const lines = csv.split('\n');
                 let imported = 0;
-                let skipped = 0;
-                let errors = [];
-                let log = '';
 
-                log += '<div class="info">📄 Total lines in file: ' + lines.length + '</div>';
-                log += '<div class="info">🔍 Processing CSV data...</div><br>';
-
-                // Skip header row
                 for (let i = 1; i < lines.length; i++) {
-                    const line = lines[i];
+                    const line = lines[i].trim();
+                    if (!line) continue;
+
+                    const [name, variant, quantity, minStock, status, location, price] = line.split(',');
                     
-                    // Parse CSV properly (handle commas in quotes)
-                    const parts = parseCSVLine(line);
-
-                    if (parts.length < 7) {
-                        const errorMsg = 'Line ' + (i+1) + ': Not enough columns (found ' + parts.length + ', need 7)';
-                        errors.push(errorMsg);
-                        log += '<div class="error">❌ ' + errorMsg + '</div>';
-                        skipped++;
-                        continue;
-                    }
-
-                    const name = parts[0].trim();
-                    const variant = parts[1].trim();
-                    const quantity = parseInt(parts[2].trim());
-                    const minStock = parseInt(parts[3].trim());
-                    const status = parts[4].trim();
-                    const location = parts[5].trim();
-                    const price = parseFloat(parts[6].trim());
-                    
-                    if (!name || !variant || !location) {
-                        const errorMsg = 'Line ' + (i+1) + ': Missing required fields (name="' + name + '", variant="' + variant + '", location="' + location + '")';
-                        errors.push(errorMsg);
-                        log += '<div class="error">❌ ' + errorMsg + '</div>';
-                        skipped++;
-                        continue;
-                    }
-
-                    if (isNaN(quantity) || isNaN(minStock) || isNaN(price)) {
-                        const errorMsg = 'Line ' + (i+1) + ': Invalid numbers (qty=' + parts[2] + ', minStock=' + parts[3] + ', price=' + parts[6] + ')';
-                        errors.push(errorMsg);
-                        log += '<div class="error">❌ ' + errorMsg + '</div>';
-                        skipped++;
-                        continue;
-                    }
-
-                    try {
-                        const product = getOrCreateProduct(name, variant);
-                        
-                        // NO DUPLICATE CHECK - JUST ADD ALL ITEMS
-                        const newItem = {
-                            id: Date.now() + i + Math.random(),
-                            productId: product.productId,
-                            name: name,
-                            variant: variant,
-                            quantity: quantity,
-                            minStock: minStock,
-                            location: location,
-                            price: price,
+                    if (name && variant && location) {
+                        inventory.push({
+                            id: Date.now() + i,
+                            name: name.trim(),
+                            variant: variant.trim(),
+                            quantity: parseInt(quantity) || 0,
+                            minStock: parseInt(minStock) || 0,
+                            location: location.trim(),
+                            price: parseFloat(price) || 0,
                             dateAdded: new Date().toISOString()
-                        };
-                        
-                        inventory.push(newItem);
-                        log += '<div class="success">✅ Line ' + (i+1) + ': Imported - ' + name + ' - ' + variant + ' (' + location + ')</div>';
+                        });
                         imported++;
-                        
-                    } catch (err) {
-                        const errorMsg = 'Line ' + (i+1) + ': Error - ' + err.message;
-                        errors.push(errorMsg);
-                        log += '<div class="error">❌ ' + errorMsg + '</div>';
-                        skipped++;
                     }
                 }
 
-                // Save and update
                 saveData();
-                addActivity('Imported ' + imported + ' items from CSV (' + skipped + ' skipped)');
+                addActivity(`Imported ${imported} items from CSV`);
                 renderInventory();
                 updateDashboard();
                 updateSelects();
-                
-                // Show summary
-                log += '<br><div style="border-top: 2px solid #ddd; padding-top: 15px; margin-top: 15px;">';
-                log += '<div class="success"><strong>✅ Successfully imported: ' + imported + ' items</strong></div>';
-                if (skipped > 0) {
-                    log += '<div class="warning"><strong>⚠️ Skipped: ' + skipped + ' items</strong></div>';
-                }
-                if (errors.length > 0) {
-                    log += '<div class="error"><strong>❌ Errors: ' + errors.length + '</strong></div>';
-                }
-                log += '</div>';
-
-                logDiv.innerHTML = log;
-                
-                // Show alert
-                let message = 'Import Complete!\n\n';
-                message += '✅ Successfully imported: ' + imported + ' items\n';
-                if (skipped > 0) {
-                    message += '⚠️ Skipped: ' + skipped + ' items\n';
-                }
-                if (errors.length > 0) {
-                    message += '❌ Errors: ' + errors.length + '\n\nCheck the log below for details.';
-                }
-                
-                alert(message);
+                alert(`Successfully imported ${imported} items!`);
                 event.target.value = '';
             };
             reader.readAsText(file);
         }
 
-        // Helper function to parse CSV line properly
-        function parseCSVLine(line) {
-            const result = [];
-            let current = '';
-            let inQuotes = false;
-            
-            for (let i = 0; i < line.length; i++) {
-                const char = line[i];
-                
-                if (char === '"') {
-                    inQuotes = !inQuotes;
-                } else if (char === ',' && !inQuotes) {
-                    result.push(current);
-                    current = '';
-                } else {
-                    current += char;
-                }
-            }
-            
-            result.push(current);
-            return result;
-        }
-
         function exportData() {
             const data = {
                 inventory: inventory,
-                productCatalog: productCatalog,
                 sales: sales,
                 transfers: transfers,
                 activities: activities,
@@ -2039,7 +1749,7 @@
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'WAWLYN-backup-' + new Date().toISOString().split('T')[0] + '.json';
+            a.download = `WAWLYN-backup-${new Date().toISOString().split('T')[0]}.json`;
             a.click();
             window.URL.revokeObjectURL(url);
             alert('Data exported successfully!');
@@ -2047,11 +1757,10 @@
 
         function clearAllData() {
             const confirmText = 'DELETE ALL DATA';
-            const userInput = prompt('⚠️ WARNING: This will delete ALL inventory, sales, and transfer records!\n\nType "' + confirmText + '" to confirm:');
+            const userInput = prompt(`⚠️ WARNING: This will delete ALL inventory, sales, and transfer records!\n\nType "${confirmText}" to confirm:`);
             
             if (userInput === confirmText) {
                 inventory = [];
-                productCatalog = [];
                 sales = [];
                 transfers = [];
                 activities = [];
@@ -2070,10 +1779,15 @@
 
         function saveData() {
             localStorage.setItem('inventory', JSON.stringify(inventory));
-            localStorage.setItem('productCatalog', JSON.stringify(productCatalog));
             localStorage.setItem('sales', JSON.stringify(sales));
             localStorage.setItem('transfers', JSON.stringify(transfers));
             localStorage.setItem('activities', JSON.stringify(activities));
+            
+            updateDashboard();
+            renderInventory();
+            renderSales();
+            renderTransfers();
+            updateSelects();
         }
 
         window.onclick = function(event) {
