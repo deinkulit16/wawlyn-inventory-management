@@ -1752,13 +1752,7 @@
                             item.location === location
                         );
                         
-                        if (existingItem) {
-                            const warningMsg = 'Line ' + (i+1) + ': Exact duplicate found - ' + name + ' - ' + variant + ' at ' + location;
-                            log += '<div class="warning">⚠️ ' + warningMsg + '</div>';
-                            skipped++;
-                            continue;
-                        }
-
+                  
                         // Add new item
                         const newItem = {
                             id: Date.now() + i + Math.random(),
