@@ -619,27 +619,27 @@
         <div id="sales" class="content">
             <h2>Record Sales</h2>
             <div class="form-grid">
-                <div class="form-group">
-                    <label>Select Item</label>
-                    <select id="saleItem" onchange="calculateSaleTotal()">
-                        <option value="">Choose item...</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Quantity Sold</label>
-                    <input type="number" id="saleQuantity" min="1" placeholder="Enter quantity" onchange="calculateSaleTotal()">
-                </div>
-                <div class="form-group">
-                    <label>Location</label>
-                    <select id="saleLocation">
-                        <option value="">Choose location...</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Transaction Date</label>
-                    <input type="date" id="saleDate">
-                </div>
-            </div>
+    <div class="form-group">
+        <label>Select Item</label>
+        <select id="saleItem" onchange="updateSaleLocation()">  <!-- CHANGED from calculateSaleTotal() -->
+            <option value="">Choose item...</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label>Location</label>
+        <select id="saleLocation" onchange="calculateSaleTotal()">  <!-- ADDED onchange -->
+            <option value="">Choose location...</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label>Quantity Sold</label>
+        <input type="number" id="saleQuantity" min="1" placeholder="Enter quantity" onchange="calculateSaleTotal()">
+    </div>
+    <div class="form-group">
+        <label>Transaction Date</label>
+        <input type="date" id="saleDate">
+    </div>
+</div>
 
             <div class="form-group">
                 <label>Discount (Optional)</label>
@@ -1174,123 +1174,137 @@
         }
 
         function calculateSaleTotal() {
-            const itemId = parseInt(document.getElementById('saleItem').value);
-            const quantity = parseInt(document.getElementById('saleQuantity').value) || 0;
-            const discountValue = parseFloat(document.getElementById('discountValue').value) || 0;
-            const discountType = document.getElementById('discountType').value;
+            const productId = parseInt(document.getElementById('saleItem').value);
+    const location = document.getElementById('saleLocation').value;
+    const quantity = parseInt(document.getElementById('saleQuantity').value) || 0;
+    const discountValue = parseFloat(document.getElementById('discountValue').value) || 0;
+    const discountType = document.getElementById('discountType').value;
 
-            if (!itemId || !quantity) {
-                document.getElementById('salePriceSummary').style.display = 'none';
-                return;
-            }
+    if (!productId || !location || !quantity) {
+        document.getElementById('salePriceSummary').style.display = 'none';
+        return;
+    }
 
-            const item = inventory.find(i => i.id === itemId);
-            if (!item) return;
+    const item = inventory.find(i => i.productId === productId && i.location === location);
+    
+    if (!item) {
+        document.getElementById('salePriceSummary').style.display = 'none';
+        alert('Item not found in selected location!');
+        return;
+    }
 
-            const subtotal = item.price * quantity;
-            let discountAmount = 0;
+    const subtotal = item.price * quantity;
+    let discountAmount = 0;
 
-            if (discountValue > 0) {
-                if (discountType === 'percent') {
-                    discountAmount = subtotal * (discountValue / 100);
-                } else {
-                    discountAmount = discountValue;
-                }
-            }
-
-            const total = subtotal - discountAmount;
-
-            document.getElementById('summaryItem').textContent = item.name + ' - ' + item.variant;
-            document.getElementById('summaryQuantity').textContent = quantity;
-            document.getElementById('summaryUnitPrice').textContent = 'TZS ' + item.price.toLocaleString();
-            document.getElementById('summarySubtotal').textContent = 'TZS ' + subtotal.toLocaleString();
-            
-            if (discountAmount > 0) {
-                document.getElementById('discountRow').style.display = 'flex';
-                const discountText = discountType === 'percent' 
-                    ? '-TZS ' + discountAmount.toLocaleString() + ' (' + discountValue + '%)'
-                    : '-TZS ' + discountAmount.toLocaleString();
-                document.getElementById('summaryDiscount').textContent = discountText;
-            } else {
-                document.getElementById('discountRow').style.display = 'none';
-            }
-
-            document.getElementById('summaryTotal').textContent = 'TZS ' + total.toLocaleString();
-            document.getElementById('salePriceSummary').style.display = 'block';
+    if (discountValue > 0) {
+        if (discountType === 'percent') {
+            discountAmount = subtotal * (discountValue / 100);
+        } else {
+            discountAmount = discountValue;
         }
+    }
+
+    const total = subtotal - discountAmount;
+
+    document.getElementById('summaryItem').textContent = item.name + ' - ' + item.variant;
+    document.getElementById('summaryLocation').textContent = location;
+    document.getElementById('summaryAvailableStock').textContent = item.quantity + ' units';
+    document.getElementById('summaryQuantity').textContent = quantity;
+    document.getElementById('summaryUnitPrice').textContent = 'TZS ' + item.price.toLocaleString();
+    document.getElementById('summarySubtotal').textContent = 'TZS ' + subtotal.toLocaleString();
+    
+    if (discountAmount > 0) {
+        document.getElementById('discountRow').style.display = 'flex';
+        const discountText = discountType === 'percent' 
+            ? '-TZS ' + discountAmount.toLocaleString() + ' (' + discountValue + '%)'
+            : '-TZS ' + discountAmount.toLocaleString();
+        document.getElementById('summaryDiscount').textContent = discountText;
+    } else {
+        document.getElementById('discountRow').style.display = 'none';
+    }
+
+    document.getElementById('summaryTotal').textContent = 'TZS ' + total.toLocaleString();
+    document.getElementById('salePriceSummary').style.display = 'block';
+}
 
         function recordSale() {
-            const itemId = parseInt(document.getElementById('saleItem').value);
-            const quantity = parseInt(document.getElementById('saleQuantity').value);
-            const location = document.getElementById('saleLocation').value;
-            const date = document.getElementById('saleDate').value;
-            const discountValue = parseFloat(document.getElementById('discountValue').value) || 0;
-            const discountType = document.getElementById('discountType').value;
+               const productId = parseInt(document.getElementById('saleItem').value);
+    const quantity = parseInt(document.getElementById('saleQuantity').value);
+    const location = document.getElementById('saleLocation').value;
+    const date = document.getElementById('saleDate').value;
+    const discountValue = parseFloat(document.getElementById('discountValue').value) || 0;
+    const discountType = document.getElementById('discountType').value;
 
-            if (!itemId || !quantity || !location || !date) {
-                alert('Please fill all required fields');
-                return;
-            }
+    if (!productId || !quantity || !location || !date) {
+        alert('Please fill all required fields');
+        return;
+    }
 
-            const item = inventory.find(i => i.id === itemId && i.location === location);
-            if (!item) {
-                alert('Item not found in selected location');
-                return;
-            }
+    // FIXED: Find the specific item at this location using productId
+    const item = inventory.find(i => i.productId === productId && i.location === location);
+    
+    if (!item) {
+        alert('Item not found in selected location!');
+        return;
+    }
 
-            if (item.quantity < quantity) {
-                alert('Insufficient stock! Only ' + item.quantity + ' available');
-                return;
-            }
+    if (item.quantity < quantity) {
+        alert('Insufficient stock! Only ' + item.quantity + ' available at ' + location);
+        return;
+    }
 
             item.quantity -= quantity;
             
             const subtotal = item.price * quantity;
-            let discountAmount = 0;
+    let discountAmount = 0;
 
-            if (discountValue > 0) {
-                if (discountType === 'percent') {
-                    discountAmount = subtotal * (discountValue / 100);
-                } else {
-                    discountAmount = discountValue;
-                }
-            }
-
-            const sale = {
-                id: Date.now(),
-                itemId: item.id,
-                name: item.name,
-                variant: item.variant,
-                quantity: quantity,
-                price: item.price,
-                location: location,
-                discountAmount: discountAmount,
-                discountType: discountType,
-                discountValue: discountValue,
-                subtotal: subtotal,
-                total: subtotal - discountAmount,
-                date: new Date(date).toISOString()
-            };
-
-            sales.push(sale);
-            saveData();
-            
-            const discountText = discountAmount > 0 
-                ? ' (Discount: ' + (discountType === 'percent' ? discountValue + '%' : 'TZS ' + discountAmount) + ')'
-                : '';
-            addActivity('Sale recorded: ' + quantity + 'x ' + item.name + ' - ' + item.variant + ' at ' + location + discountText);
-            
-            renderSales();
-            renderInventory();
-            updateDashboard();
-            
-            document.getElementById('saleQuantity').value = '';
-            document.getElementById('discountValue').value = '';
-            document.getElementById('salePriceSummary').style.display = 'none';
-            setDefaultDate();
-            
-            alert('Sale recorded successfully!');
+    if (discountValue > 0) {
+        if (discountType === 'percent') {
+            discountAmount = subtotal * (discountValue / 100);
+        } else {
+            discountAmount = discountValue;
         }
+    }
+
+    const sale = {
+        id: Date.now(),
+        itemId: item.id,
+        productId: item.productId,
+        name: item.name,
+        variant: item.variant,
+        quantity: quantity,
+        price: item.price,
+        location: location,
+        discountAmount: discountAmount,
+        discountType: discountType,
+        discountValue: discountValue,
+        subtotal: subtotal,
+        total: subtotal - discountAmount,
+        date: new Date(date).toISOString()
+    };
+
+    sales.push(sale);
+    saveData();
+    
+    const discountText = discountAmount > 0 
+        ? ' (Discount: ' + (discountType === 'percent' ? discountValue + '%' : 'TZS ' + discountAmount) + ')'
+        : '';
+    addActivity('Sale recorded: ' + quantity + 'x ' + item.name + ' - ' + item.variant + ' at ' + location + discountText);
+    
+    renderSales();
+    renderInventory();
+    updateDashboard();
+    
+    // Reset form
+    document.getElementById('saleItem').value = '';
+    document.getElementById('saleLocation').innerHTML = '<option value="">Choose location...</option>';
+    document.getElementById('saleQuantity').value = '';
+    document.getElementById('discountValue').value = '';
+    document.getElementById('salePriceSummary').style.display = 'none';
+    setDefaultDate();
+    
+    alert('Sale recorded successfully!');
+}
 
         function renderSales(filteredSales = null) {
             const tbody = document.getElementById('salesBody');
