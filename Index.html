@@ -1887,5 +1887,19 @@
             }
         }
 
-        function saveData() {
-            localStorage.setItem('inventory', JSON.stringifyinventory)
+          function saveData() {
+            localStorage.setItem('inventory', JSON.stringify(inventory));
+            localStorage.setItem('productCatalog', JSON.stringify(productCatalog));
+            localStorage.setItem('sales', JSON.stringify(sales));
+            localStorage.setItem('transfers', JSON.stringify(transfers));
+            localStorage.setItem('activities', JSON.stringify(activities));
+        }
+
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        };
+    </script>
+</body>
+</html>
