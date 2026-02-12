@@ -468,6 +468,22 @@
             font-style: italic;
         }
 
+        .import-log {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+        }
+
+        .import-log .success { color: #28a745; }
+        .import-log .error { color: #dc3545; }
+        .import-log .warning { color: #ffc107; }
+        .import-log .info { color: #17a2b8; }
+
         @media print {
             body * {
                 visibility: hidden;
@@ -782,10 +798,20 @@
                 <input type="file" id="csvFile" accept=".csv" onchange="handleFileUpload(event)">
             </div>
 
-            <p style="color: #666; margin-top: 10px; margin-bottom: 20px;">
-                <strong>Format:</strong> Name, Variant, Quantity, Min Stock, Status, Location, Price<br>
-                <strong>Example:</strong> iPhone 14 Pro, 128GB Black, 10, 5, In Stock, Main Store, 45000
-            </p>
+            <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                <p style="margin-bottom: 10px;"><strong>📋 CSV Format Requirements:</strong></p>
+                <p style="margin-bottom: 5px;"><strong>Columns:</strong> Name, Variant, Quantity, Min Stock, Status, Location, Price</p>
+                <p style="margin-bottom: 5px;"><strong>Example:</strong> iPhone 14 Pro, 128GB Black, 10, 5, In Stock, Main Store, 45000</p>
+                <p style="margin-top: 10px; color: #856404;"><strong>⚠️ Important:</strong></p>
+                <ul style="margin-left: 20px; color: #856404;">
+                    <li>Make sure there are NO empty lines in your CSV</li>
+                    <li>The first row should be the header (column names)</li>
+                    <li>All 7 columns must be present in each row</li>
+                    <li>Duplicate items (same name+variant+location) will be skipped</li>
+                </ul>
+            </div>
+
+            <div id="importLog" class="import-log" style="display: none;"></div>
 
             <div style="border-top: 2px solid #ddd; padding-top: 20px; margin-top: 30px;">
                 <h3 style="color: #dc3545; margin-bottom: 15px;">⚠️ Data Management</h3>
@@ -1653,43 +1679,63 @@
             a.click();
         }
 
+        // IMPROVED CSV IMPORT FUNCTION
         function handleFileUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
 
+            const logDiv = document.getElementById('importLog');
+            logDiv.style.display = 'block';
+            logDiv.innerHTML = '<div class="info">📥 Starting import...</div>';
+
             const reader = new FileReader();
             reader.onload = function(e) {
                 const csv = e.target.result;
-                const lines = csv.split('\n');
+                const lines = csv.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+                
                 let imported = 0;
                 let skipped = 0;
                 let errors = [];
+                let log = '';
 
+                log += '<div class="info">📄 Total lines in file: ' + lines.length + '</div>';
+                log += '<div class="info">🔍 Processing CSV data...</div><br>';
+
+                // Skip header row
                 for (let i = 1; i < lines.length; i++) {
-                    const line = lines[i].trim();
+                    const line = lines[i];
                     
-                    if (!line) {
-                        continue;
-                    }
-
-                    const parts = line.split(',').map(p => p.trim());
+                    // Parse CSV properly (handle commas in quotes)
+                    const parts = parseCSVLine(line);
 
                     if (parts.length < 7) {
-                        errors.push('Line ' + i + ': Not enough columns (found ' + parts.length + ', need 7)');
+                        const errorMsg = 'Line ' + (i+1) + ': Not enough columns (found ' + parts.length + ', need 7)';
+                        errors.push(errorMsg);
+                        log += '<div class="error">❌ ' + errorMsg + '</div>';
                         skipped++;
                         continue;
                     }
 
-                    const name = parts[0];
-                    const variant = parts[1];
-                    const quantity = parts[2];
-                    const minStock = parts[3];
-                    const status = parts[4];
-                    const location = parts[5];
-                    const price = parts[6];
+                    const name = parts[0].trim();
+                    const variant = parts[1].trim();
+                    const quantity = parseInt(parts[2].trim());
+                    const minStock = parseInt(parts[3].trim());
+                    const status = parts[4].trim();
+                    const location = parts[5].trim();
+                    const price = parseFloat(parts[6].trim());
                     
                     if (!name || !variant || !location) {
-                        errors.push('Line ' + i + ': Missing required fields (name, variant, or location)');
+                        const errorMsg = 'Line ' + (i+1) + ': Missing required fields (name="' + name + '", variant="' + variant + '", location="' + location + '")';
+                        errors.push(errorMsg);
+                        log += '<div class="error">❌ ' + errorMsg + '</div>';
+                        skipped++;
+                        continue;
+                    }
+
+                    if (isNaN(quantity) || isNaN(minStock) || isNaN(price)) {
+                        const errorMsg = 'Line ' + (i+1) + ': Invalid numbers (qty=' + parts[2] + ', minStock=' + parts[3] + ', price=' + parts[6] + ')';
+                        errors.push(errorMsg);
+                        log += '<div class="error">❌ ' + errorMsg + '</div>';
                         skipped++;
                         continue;
                     }
@@ -1697,55 +1743,100 @@
                     try {
                         const product = getOrCreateProduct(name, variant);
                         
+                        // Check if item already exists
                         const existingItem = inventory.find(item => 
                             item.productId === product.productId && item.location === location
                         );
                         
                         if (existingItem) {
+                            const warningMsg = 'Line ' + (i+1) + ': Item already exists - ' + name + ' - ' + variant + ' at ' + location;
+                            log += '<div class="warning">⚠️ ' + warningMsg + '</div>';
                             skipped++;
                             continue;
                         }
 
-                        inventory.push({
+                        // Add new item
+                        const newItem = {
                             id: Date.now() + i + Math.random(),
                             productId: product.productId,
                             name: name,
                             variant: variant,
-                            quantity: parseInt(quantity) || 0,
-                            minStock: parseInt(minStock) || 0,
+                            quantity: quantity,
+                            minStock: minStock,
                             location: location,
-                            price: parseFloat(price) || 0,
+                            price: price,
                             dateAdded: new Date().toISOString()
-                        });
+                        };
+                        
+                        inventory.push(newItem);
+                        log += '<div class="success">✅ Line ' + (i+1) + ': Imported - ' + name + ' - ' + variant + ' (' + location + ')</div>';
                         imported++;
+                        
                     } catch (err) {
-                        errors.push('Line ' + i + ': Error - ' + err.message);
+                        const errorMsg = 'Line ' + (i+1) + ': Error - ' + err.message;
+                        errors.push(errorMsg);
+                        log += '<div class="error">❌ ' + errorMsg + '</div>';
                         skipped++;
                     }
                 }
 
+                // Save and update
                 saveData();
                 addActivity('Imported ' + imported + ' items from CSV (' + skipped + ' skipped)');
                 renderInventory();
                 updateDashboard();
                 updateSelects();
                 
+                // Show summary
+                log += '<br><div style="border-top: 2px solid #ddd; padding-top: 15px; margin-top: 15px;">';
+                log += '<div class="success"><strong>✅ Successfully imported: ' + imported + ' items</strong></div>';
+                if (skipped > 0) {
+                    log += '<div class="warning"><strong>⚠️ Skipped: ' + skipped + ' items</strong></div>';
+                }
+                if (errors.length > 0) {
+                    log += '<div class="error"><strong>❌ Errors: ' + errors.length + '</strong></div>';
+                }
+                log += '</div>';
+
+                logDiv.innerHTML = log;
+                
+                // Show alert
                 let message = 'Import Complete!\n\n';
                 message += '✅ Successfully imported: ' + imported + ' items\n';
                 if (skipped > 0) {
-                    message += '⚠️ Skipped: ' + skipped + ' items\n\n';
+                    message += '⚠️ Skipped: ' + skipped + ' items\n';
                 }
                 if (errors.length > 0) {
-                    message += 'Errors:\n';
-                    errors.forEach(function(err) {
-                        message += '- ' + err + '\n';
-                    });
+                    message += '❌ Errors: ' + errors.length + '\n\nCheck the log below for details.';
                 }
                 
                 alert(message);
                 event.target.value = '';
             };
             reader.readAsText(file);
+        }
+
+        // Helper function to parse CSV line properly
+        function parseCSVLine(line) {
+            const result = [];
+            let current = '';
+            let inQuotes = false;
+            
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                
+                if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    result.push(current);
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            
+            result.push(current);
+            return result;
         }
 
         function exportData() {
