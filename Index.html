@@ -513,7 +513,7 @@
         </form>
         <p style="margin-top: 20px; color: #666; font-size: 14px;">
             Default credentials:<br>
-            Email: admin@wawlyn.com<br>
+            Email: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7e1f1a1317103e091f09120710501d1113">[email&#160;protected]</a><br>
             Password: admin123
         </p>
     </div>
@@ -529,7 +529,7 @@
                 </div>
             </div>
             <div class="header-right">
-                <div class="user-info" id="userInfo">👤 Logged in as: admin@wawlyn.com</div>
+                <div class="user-info" id="userInfo">👤 Logged in as: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b9d8ddd4d0d7f9ced8ced5c0d797dad6d4">[email&#160;protected]</a></div>
                 <button class="logout-btn" onclick="logout()">🚪 Logout</button>
             </div>
         </div>
@@ -914,7 +914,7 @@
         </div>
     </div>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         // Data storage
         let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
         let productCatalog = JSON.parse(localStorage.getItem('productCatalog')) || [];
@@ -1046,11 +1046,13 @@
 
             const product = getOrCreateProduct(name, variant);
             const existingItem = inventory.find(i => 
-                i.productId === product.productId && i.location === location
+                i.name === name && 
+                i.variant === variant && 
+                i.location === location
             );
 
             if (existingItem) {
-                alert('This item already exists in this location. Please edit the existing item instead.');
+                alert('This exact item (same name, variant, and location) already exists. Please edit the existing item instead.');
                 return;
             }
 
@@ -1743,13 +1745,15 @@
                     try {
                         const product = getOrCreateProduct(name, variant);
                         
-                        // Check if item already exists
+                        // Check if EXACT SAME item already exists (name + variant + location)
                         const existingItem = inventory.find(item => 
-                            item.productId === product.productId && item.location === location
+                            item.name === name && 
+                            item.variant === variant && 
+                            item.location === location
                         );
                         
                         if (existingItem) {
-                            const warningMsg = 'Line ' + (i+1) + ': Item already exists - ' + name + ' - ' + variant + ' at ' + location;
+                            const warningMsg = 'Line ' + (i+1) + ': Exact duplicate found - ' + name + ' - ' + variant + ' at ' + location;
                             log += '<div class="warning">⚠️ ' + warningMsg + '</div>';
                             skipped++;
                             continue;
@@ -1884,12 +1888,4 @@
         }
 
         function saveData() {
-            localStorage.setItem('inventory', JSON.stringify(inventory));
-            localStorage.setItem('productCatalog', JSON.stringify(productCatalog));
-            localStorage.setItem('sales', JSON.stringify(sales));
-            localStorage.setItem('transfers', JSON.stringify(transfers));
-            localStorage.setItem('activities', JSON.stringify(activities));
-        }
-    </script>
-</body>
-</html>
+            localStorage.setItem('inventory', JSON.stringify(invento
